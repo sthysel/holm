@@ -1,0 +1,91 @@
+version: '3.7'
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer
+    restart: always
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./volumes/portainer/data:/data
+
+  mqtt:
+    container_name: mqtt
+    image: eclipse-mosquitto
+    restart: always
+    expose:
+      - "1883"
+
+  influx:
+    container_name: influxdb
+    image: "influxdb:latest"
+    restart: always
+    ports:
+      - 8086:8086
+      - 8083:8083
+      - 2003:2003
+    env_file:
+      - ./influx/influx.env
+    volumes:
+      - ./volumes/influx/data:/var/lib/influxdb
+      - ./volumes/backups/influx/db:/var/lib/influxdb/backup
+
+  telegraf:
+    container_name: telegraf
+    image: telegraf
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influx
+      - mqtt
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:6.3.6
+    restart: always
+    user: "0"
+    ports:
+      - 3000:3000
+    env_file:
+      - ./grafana/grafana.env
+    volumes:
+      - ./volumes/grafana/data:/var/lib/grafana
+      - ./volumes/grafana/log:/var/log/grafana
+
+  nodered:
+    container_name: nodered
+    build: ./nodered/.
+    restart: always
+    user: "0"
+    privileged: true
+    env_file: ./nodered/nodered.env
+    ports:
+      - 1880:1880
+    volumes:
+      - ./volumes/nodered/data:/data
+
+  rtl_433:
+    container_name: rtl_433
+    build: ./rtl_433/.
+    restart: always
+    user: "0"
+    privileged: true
+    env_file: ./rtl_433/rtl_433.env
+    devices:
+      - /dev/bus/usb
+
+  heimdall:
+    image: linuxserver/heimdall
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ./volumes/heimdall:/config
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+
