@@ -74,7 +74,6 @@ See the [docker-compose](holm/docker-compose.yml) file for detail.
 
 ## Heimdall
 
-![Heindall Portal](docs/pics/heimdall.png)
 
 Heimdall provides a landing page portal that allows you to configure all your
 interesting landing pages once so you do not have to remember on which port each
@@ -95,10 +94,6 @@ other services as well. Be sure to add new services to
 [docker-compose.yml](holm/docker-compose.yml) with a 'always' restart policy
 if the service needs to be pulled up with the rest of the stack.
 
-![Portainer Dashboard](docs/pics/portainer-dash.png)
-
-![Portainer Containers](docs/pics/portainer-containers.png)
-
 
 ## Node-red
 
@@ -106,7 +101,6 @@ Nodered wired to MQTT allows message management, visualization and processing.
 
 ### rtl_433 traffic flow
 
-![RTL 433](docs/pics/rtl_433.png)
 
 The RTL_433 process uses a software defined radio dongle to receive wireless
 sensor traffic on the 433Mhz band, and others, decodes the packets and submits
@@ -142,20 +136,9 @@ return msg;
 Node red's Dashboard facility is fine for quick gauges and graphs if Influx +
 Grafana is unnecessary. Why not both ?
 
-Specify dash flows using the dashboard widgets
-
-![PAT](docs/pics/rtl-node-red-dash-flow.png)
 
 Resulting in a simple Gauge Dashboard on http://holm:1880/ui like so:
 
-![PAT](docs/pics/rtl-node-red-dashboard.png)
-
-### External message source
-
-![PAT](docs/pics/nodered-pat.png)
-
-Feed flows in from any other available sources. Here is a another MQTT data
-source.
 
 ### Plugins
 
@@ -200,8 +183,6 @@ If a SDR dongle is plugged into the pi, this service will start harvesting
 and visualize them. They can also be persisted to the influx database.
 
 ## Grafana
-
-![Grafana RTL Prologue](docs/pics/grafana.png)
 
 Grafana is used to visualize data available from the influxdb and others. In
 this example the RTL 433 data from the SDR dongle that was persisted to the
